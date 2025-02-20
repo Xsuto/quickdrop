@@ -1,6 +1,5 @@
 import {
   HeadContent,
-  Link,
   Outlet,
   Scripts,
   createRootRoute,
@@ -25,6 +24,7 @@ export const Route = createRootRoute({
       ...seo({
         title: 'QuickDrop',
         description: 'The fastest way to move files between your devices - drop, grab, and go',
+        keywords: "File sharing, File transfer, File upload, File download, File sharing app",
       }),
     ],
     links: [

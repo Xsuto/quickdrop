@@ -40,10 +40,9 @@ export const APIRoute = createAPIFileRoute('/api/upload')({
         })
       )
 
-      // Store all files under single ID
       await redis.set(fileId, JSON.stringify(processedFiles), 3600)
 
-      return json({ ids: [fileId] })
+      return json({ id: fileId })
     } catch (error) {
       console.error('Error during file upload:', error)
       return json({ error: 'Failed to upload files' }, { status: 500 })
