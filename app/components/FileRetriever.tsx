@@ -27,6 +27,9 @@ export function FileRetriever() {
           onChange={(e) => setDownloadId(e.target.value)}
           placeholder="e.g. happy-blue-dolphin"
           className="px-3 py-2 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg"
+          autoComplete='off'
+          autoCorrect='off'
+          autoCapitalize="none"
         />
         <button
           type="submit"
