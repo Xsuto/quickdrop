@@ -9,6 +9,9 @@ export function FileDropzone() {
   const [showIdTooltip, setShowIdTooltip] = useState(false)
   const [showUrlTooltip, setShowUrlTooltip] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const dropzoneRef = useRef<HTMLDivElement>(null)
+  const [isHovering, setIsHovering] = useState(false)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -114,23 +117,48 @@ export function FileDropzone() {
     }
   }, [fileUrl])
 
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!dropzoneRef.current) return
+    const rect = dropzoneRef.current.getBoundingClientRect()
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    })
+    setIsHovering(true)
+  }, [])
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false)
+  }, [])
+
   return (
     <div className="space-y-6">
       <div
+        ref={dropzoneRef}
         onClick={handleClick}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         className={`
-          w-full h-80 border-2 border-dashed rounded-xl 
+          relative w-full h-80 border-2 border-dashed rounded-xl 
           transition-all duration-200 ease-in-out cursor-pointer
+          overflow-hidden
           ${isDragging
             ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
             : 'border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
           }
         `}
       >
+        <div
+          className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
+          style={{
+            opacity: isDragging ? 0 : (isHovering ? 0.5 : 0),
+            background: `radial-gradient(20rem circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(29, 78, 216, 0.15), transparent 80%)`
+          }}
+        />
         <input
           ref={fileInputRef}
           type="file"
