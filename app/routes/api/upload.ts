@@ -5,9 +5,9 @@ import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-
 
 function generateFriendlyId() {
   return uniqueNamesGenerator({
-    dictionaries: [adjectives, colors, animals],
+    dictionaries: [colors, animals],
     separator: '-',
-    length: 3,
+    length: 2,
     style: 'lowerCase'
   })
 }
