@@ -64,7 +64,17 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <RootDocument>
-      <Outlet />
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950">
+        <header className="border-b bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+          <div className="max-w-5xl mx-auto px-4 py-4">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">QuickDrop</h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Secure file sharing made simple</p>
+          </div>
+        </header>
+        <main className="max-w-5xl mx-auto px-4 py-8">
+          <Outlet />
+        </main>
+      </div>
     </RootDocument>
   )
 }

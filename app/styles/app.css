@@ -5,6 +5,8 @@
 @layer base {
   html {
     color-scheme: light dark;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   * {
@@ -18,5 +20,11 @@
 
   .using-mouse * {
     outline: none !important;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-backdrop {
+    background-image: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
   }
 }

@@ -20,6 +20,8 @@ export const APIRoute = createAPIFileRoute('/api/download/$id')({
       // Decode base64 data
       const buffer = Buffer.from(file.data, 'base64')
       console.log('Decoded file size:', buffer.length, 'bytes')
+
+      await redis.del(id)
       
       // Create response with proper headers
       return new Response(buffer, {
