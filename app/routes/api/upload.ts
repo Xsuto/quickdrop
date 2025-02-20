@@ -1,11 +1,11 @@
 import { json } from '@tanstack/start'
 import { createAPIFileRoute } from '@tanstack/start/api'
 import { redis } from '~/utils/redis'
-import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator'
+import { uniqueNamesGenerator, adjectives, colors, animals, starWars, countries, names } from 'unique-names-generator'
 
 function generateFriendlyId() {
   return uniqueNamesGenerator({
-    dictionaries: [colors, animals],
+    dictionaries: [colors, animals, adjectives, starWars, countries, names],
     separator: '-',
     length: 2,
     style: 'lowerCase'
