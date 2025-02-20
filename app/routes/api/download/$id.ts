@@ -1,13 +1,28 @@
 import { createAPIFileRoute } from '@tanstack/start/api'
 import { redis } from '~/utils/redis'
+import { checkRateLimit } from '~/utils/rateLimit'
 import JSZip from 'jszip'
+import { getClientIp } from '~/utils/getClientIp'
 
 export const APIRoute = createAPIFileRoute('/api/download/$id')({
-  GET: async ({ params }) => {
+  GET: async ({ params, request }) => {
     const { id } = params
-    console.log('API: Attempting to download files for ID:', id)
+    const clientIp = getClientIp(request)
+    console.log('Download IP:', clientIp)
     
     try {
+      const isAllowed = await checkRateLimit(clientIp, 'download', 50, 60)
+      if (!isAllowed) {
+        return new Response('Too many downloads. Please try again later.', { 
+          status: 429,
+          headers: {
+            'Retry-After': '300'
+          }
+        })
+      }
+
+      console.log('API: Attempting to download files for ID:', id)
+      
       const data = await redis.get(id)
       
       if (!data) {
