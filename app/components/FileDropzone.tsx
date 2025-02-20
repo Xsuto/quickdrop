@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useRef } from 'react'
 
 export function FileDropzone() {
   const [isDragging, setIsDragging] = useState(false)
@@ -6,6 +6,7 @@ export function FileDropzone() {
   const [fileId, setFileId] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [showResult, setShowResult] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -22,6 +23,44 @@ export function FileDropzone() {
       await navigator.clipboard.writeText(fileUrl)
     }
   }, [fileUrl])
+
+  const handleClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.length) return
+
+    setIsUploading(true)
+    setFileUrl(null)
+    setFileId(null)
+    setShowResult(false)
+
+    const files = Array.from(e.target.files)
+    const formData = new FormData()
+    files.forEach(file => {
+      formData.append('files', file)
+    })
+
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      const { id } = await response.json()
+      const url = `${window.location.origin}/api/download/${id}`
+      setFileUrl(url)
+      setFileId(id)
+      setTimeout(() => setShowResult(true), 100)
+    } catch (error) {
+      console.error('Upload failed:', error)
+    } finally {
+      setIsUploading(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
 
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault()
@@ -60,19 +99,27 @@ export function FileDropzone() {
   return (
     <div className="space-y-6">
       <div
+        onClick={handleClick}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
         className={`
           w-full h-80 border-2 border-dashed rounded-xl 
-          transition-all duration-200 ease-in-out
+          transition-all duration-200 ease-in-out cursor-pointer
           ${isDragging
             ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
             : 'border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
           }
         `}
       >
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          className="hidden"
+          onChange={handleFileSelect}
+        />
         <div className="h-full flex flex-col items-center justify-center">
           {isUploading ? (
             <div className="space-y-4 text-center">
@@ -88,6 +135,7 @@ export function FileDropzone() {
               </div>
               <div>
                 <p className="text-xl font-medium text-gray-900 dark:text-white">Drop files here</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">or click to select files</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Files will be available for 1 hour</p>
               </div>
             </div>
