@@ -17,17 +17,22 @@ export const APIRoute = createAPIFileRoute('/api/download/$id')({
 
       const files = JSON.parse(data)
       
-      if (!Array.isArray(files)) {
-        const buffer = Buffer.from(files.data, 'base64')
+      // If there's only one file, return it directly
+      if (!Array.isArray(files) || files.length === 1) {
+        const file = Array.isArray(files) ? files[0] : files
+        const buffer = Buffer.from(file.data, 'base64')
+        await redis.del(id)
+        
         return new Response(buffer, {
           headers: {
-            'Content-Type': files.type,
-            'Content-Disposition': `attachment; filename="${files.name}"`,
+            'Content-Type': file.type,
+            'Content-Disposition': `attachment; filename="${file.name}"`,
             'Content-Length': buffer.length.toString()
           }
         })
       }
 
+      // Multiple files - create a zip
       const zip = new JSZip()
       
       files.forEach(file => {
