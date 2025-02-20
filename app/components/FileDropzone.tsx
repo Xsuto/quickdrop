@@ -6,6 +6,8 @@ export function FileDropzone() {
   const [fileId, setFileId] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [showResult, setShowResult] = useState(false)
+  const [showIdTooltip, setShowIdTooltip] = useState(false)
+  const [showUrlTooltip, setShowUrlTooltip] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = useCallback((e: React.DragEvent) => {
@@ -96,6 +98,22 @@ export function FileDropzone() {
     }
   }, [])
 
+  const handleCopyId = useCallback(async () => {
+    if (fileId) {
+      await navigator.clipboard.writeText(fileId)
+      setShowIdTooltip(true)
+      setTimeout(() => setShowIdTooltip(false), 2000)
+    }
+  }, [fileId])
+
+  const handleCopyUrl = useCallback(async () => {
+    if (fileUrl) {
+      await navigator.clipboard.writeText(fileUrl)
+      setShowUrlTooltip(true)
+      setTimeout(() => setShowUrlTooltip(false), 2000)
+    }
+  }, [fileUrl])
+
   return (
     <div className="space-y-6">
       <div
@@ -150,20 +168,40 @@ export function FileDropzone() {
         {(fileUrl && fileId) && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 overflow-hidden">
             <div className="p-6 text-center space-y-4">
-              <div className="animate-fade-in">
+              <div className="animate-fade-in relative">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Your File ID</p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1 animate-slide-up">{fileId}</p>
+                <div className="relative inline-block">
+                  <p 
+                    onClick={handleCopyId}
+                    className="text-3xl font-bold text-gray-900 dark:text-white mt-1 animate-slide-up cursor-pointer hover:text-blue-500 transition-colors"
+                    title="Click to copy"
+                  >
+                    {fileId}
+                  </p>
+                  {showIdTooltip && (
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-2 py-1 rounded">
+                      Copied!
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="max-w-md mx-auto animate-slide-up delay-150">
-                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900 rounded-lg p-2">
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-900 rounded-lg p-2 relative">
                   <input
                     type="text"
                     value={fileUrl}
                     readOnly
-                    className="flex-1 bg-transparent border-0 text-sm text-gray-600 dark:text-gray-400 px-2"
+                    onClick={handleCopyUrl}
+                    className="flex-1 bg-transparent border-0 text-sm text-gray-600 dark:text-gray-400 px-2 cursor-pointer hover:text-blue-500 transition-colors"
+                    title="Click to copy"
                   />
+                  {showUrlTooltip && (
+                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-2 py-1 rounded">
+                      Copied!
+                    </div>
+                  )}
                   <button
-                    onClick={handleCopy}
+                    onClick={handleCopyUrl}
                     className="shrink-0 px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-md transition-colors"
                   >
                     Copy
