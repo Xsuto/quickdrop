@@ -6,8 +6,8 @@ export function FileRetriever() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!downloadId) return
-    
-    window.location.href = `/api/download/${downloadId}`
+
+    window.location.href = `/api/download/${downloadId.trim()}`
   }
 
   return (
