@@ -8,7 +8,7 @@ export const Route = createFileRoute('/')({
 
 function Home() {
   return (
-    <div className="max-w-2xl ">
+    <div className="max-w-2xl">
       <div className="space-y-6">
         <div className="text-center space-y-2">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">

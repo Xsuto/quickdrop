@@ -71,7 +71,7 @@ function RootComponent() {
             <p className="text-sm text-gray-600 dark:text-gray-400">File sharing made simple</p>
           </div>
         </header>
-        <main className="container mx-auto max-w-5xl px-4 py-8">
+        <main className="container w-fit mx-auto max-w-5xl px-4 py-8">
           <Outlet />
         </main>
       </div>
