@@ -12,7 +12,7 @@ import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
 
 export const Route = createRootRoute({
-  head: () => ({
+  head: (ctx) => ({
     meta: [
       {
         charSet: 'utf-8',
@@ -52,8 +52,8 @@ export const Route = createRootRoute({
     scripts: [
       {
         defer: true,
-        src: 'https://plausible.xsuto.com/js/script.file-downloads.js',
-        'data-domain': 'plausible.xsuto.com',
+        src: '/js/script.js',
+        'data-domain': 'drop.xsuto.com',
       },
       {
         children: 'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',

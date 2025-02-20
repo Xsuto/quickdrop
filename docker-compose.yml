@@ -6,6 +6,8 @@ services:
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_HOST=redis
+      - VITE_PUBLIC_FQDN=${COOLIFY_FQDN}
+      - FQDN=${COOLIFY_FQDN}
     restart: unless-stopped
     depends_on:
       redis:
