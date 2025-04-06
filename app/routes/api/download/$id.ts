@@ -23,14 +23,13 @@ export const APIRoute = createAPIFileRoute('/api/download/$id')({
 
       console.log('API: Attempting to download files for ID:', id)
       
-      const data = await redis.get(id)
+      const files = await redis.get(id)
       
-      if (!data) {
+      if (!files) {
         console.log('API: No data found in Redis for ID:', id)
         return new Response('File not found', { status: 404 })
       }
 
-      const files = JSON.parse(data)
       
       // If there's only one file, return it directly
       if (!Array.isArray(files) || files.length === 1) {
