@@ -49,16 +49,6 @@ export const Route = createRootRoute({
       { rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
       { rel: 'icon', href: '/favicon.ico' },
     ],
-    scripts: [
-      {
-        defer: true,
-        src: '/js/script.js',
-        'data-domain': 'drop.xsuto.com',
-      },
-      {
-        children: 'window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }',
-      }
-    ]
   }),
   errorComponent: (props) => {
     return (
