@@ -4,6 +4,7 @@ import { FileRetriever } from '~/components/FileRetriever'
 
 export const Route = createFileRoute('/')({
   component: Home,
+  ssr: false
 })
 
 function Home() {
